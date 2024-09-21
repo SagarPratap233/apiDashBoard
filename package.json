@@ -1,23 +1,12 @@
 {
-  "name": "apidashboard",
+  "name": "api_dashboard",
   "version": "1.0.0",
-  "main": "index.js",
+  "private": true,
   "scripts": {
-    "dev": "nodemon --watch src -e ts --exec ts-node src/index.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "concurrently \"npm run dev --prefix api_dashboard_backend\" \"npm start --prefix api_dashboard_frontend\""
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
-    "@types/express": "^4.17.21",
-    "@types/node": "^22.5.5",
-    "axios": "^1.7.7",
-    "dotenv": "^16.4.5",
-    "express": "^4.21.0",
-    "nodemon": "^3.1.5",
-    "ts-node": "^10.9.2",
-    "typescript": "^5.6.2"
+    "concurrently": "^7.0.0",
+    "curlconverter": "^4.10.1"
   }
 }
