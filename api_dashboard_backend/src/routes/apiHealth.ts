@@ -1,19 +1,29 @@
-import { Router, Request, Response } from 'express'
+import { Router, Request, Response , NextFunction} from 'express'
 import { checkAPIHealth } from '../healthChecks/apiHealthCheck'
+
+interface api {
+  _id: string
+  url: string
+  body: object | null
+  headers: object
+  method: string
+  __v: number
+}
 
 const router = Router()
 
-router.get('/', async (req: Request, res: Response) => {
-  const url = req.query.url as string
-  if (!url) {
-    return res.status(500).json({ error: 'URL is required' })
+router.post('/', async (req: Request, res: Response, next:NextFunction) => {
+  const api = req.body as api;
+
+  if (!api) {
+    return next(new Error('URL is required'))
   }
 
   try {
-    const result = await checkAPIHealth(url)
+    const result = await checkAPIHealth(api)
     res.status(200).json(result)
   } catch (error) {
-    res.status(500).json({ error: 'Internal server error' })
+    next(error);
   }
 })
 

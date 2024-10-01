@@ -1,10 +1,12 @@
 import express, {Request, Response} from 'express';
 import dotenv from 'dotenv';
-import {checkAPIHealth} from './healthChecks/apiHealthCheck';
 import apiHealthRoutes from './routes/apiHealth';
 import curlCommandRoutes from './routes/curlCommand';
+import checkHealthPerAPI from './routes/checkHealthPerAPI'
+import fetchCollection from './routes/fetchCollections'
 import mongoose from 'mongoose';
-
+import { errorHandler } from './middleware/errorHandle';
+import {collection} from './models/apiCollection';
 
 
 dotenv.config();
@@ -31,7 +33,11 @@ app.get('/', async (req: Request, res: Response)=> {
 
 app.use('/apiHealth', apiHealthRoutes)
 app.use('/curlCommands', curlCommandRoutes)
+app.use('/checkHealthPerAPI', checkHealthPerAPI)
+app.use('/collections', fetchCollection)
 
 app.listen(PORT, ()=> {
     console.log(`Server is listening at ${PORT}`)
 });
+
+app.use(errorHandler);
