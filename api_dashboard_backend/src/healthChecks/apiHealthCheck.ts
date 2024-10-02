@@ -1,4 +1,7 @@
 import axios, {AxiosError}from 'axios';
+import {collection} from '../models/apiCollection'
+import { CurlCommand } from '../models/curlCommand';
+
 
 interface healthOutput{
     status : number | null;
@@ -18,7 +21,7 @@ interface api {
 export const checkAPIHealth = async(api: api|null): Promise<healthOutput> => {
   if(api){
     const {url, headers, method} = api;
-    console.log({ url, headers, method });
+    // console.log({ url, headers, method });
     const headersConvert:object = Object.entries(headers)
     try{
         const startTime = Date.now();
@@ -62,4 +65,23 @@ export const checkAPIHealth = async(api: api|null): Promise<healthOutput> => {
          latency: null,
          success: false,
        }
+}
+
+
+export const apiHealthCheckPerCollection = async (id: string) => {
+  const apiCollection = await collection.findById(id).populate('apis');
+  if(!apiCollection){
+    return null;
+  }
+  const result = await Promise.all(apiCollection.apis.map(async (api)=> {
+    const apiRecord :api|null= await  CurlCommand.findById(api);
+    if(apiRecord)
+      {
+        const res = await checkAPIHealth(apiRecord)
+        return res;
+      }
+     return null;
+  }))
+  return result;
+
 }

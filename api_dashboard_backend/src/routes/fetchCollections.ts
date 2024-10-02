@@ -34,5 +34,35 @@ router.post(('/'),async (req:Request, res:Response, next:NextFunction)=> {
     }
 })
 
+router.delete('/', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const del = await collection.deleteMany({})
+    res.status(200).json("All collection are deleted")
+  } catch (error) {
+    next(error)
+  }
+})
+
+
+router.delete('/:id', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const collectionId = req.params.id
+    console.log(collectionId)
+    const del = await collection.findByIdAndDelete(collectionId)
+    if(del){
+    res.status(200).json(`${collectionId} collection is deleted`)
+    }
+    else{
+        res.status(404).json(
+            "Collection not found!"
+        )
+    }
+  } catch (error) {
+    next(error)
+  }
+})
+
+
+
 
 export default router

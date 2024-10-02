@@ -1,22 +1,30 @@
-import mongoose, { Schema, Types, Document} from "mongoose";
+import mongoose, { Schema, Types, Document } from 'mongoose'
 
-
-interface Icollection extends Document{
-    name : string,
-    apis : Types.ObjectId[];
+interface IApiInterval {
+  api: Types.ObjectId // Reference to the CurlCommand (API)
+  interval: string // Polling interval for this API
 }
 
-const collectionSchema: Schema  = new Schema({
+interface ICollection extends Document {
+  name: string
+  apis: IApiInterval[] // Array of API-interval pairs
+}
+
+const collectionSchema: Schema<ICollection> = new Schema({
   name: { type: String, required: true },
   apis: [
     {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: 'CurlCommand',
-      required: true,
+      api: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'CurlCommand',
+        required: true,
+      }, // API reference
+      interval: { type: String, required: true }, // Polling interval
     },
   ],
 })
 
-export const collection = mongoose.model<Icollection>('collection', collectionSchema);
-
-
+export const collection = mongoose.model<ICollection>(
+  'Collection',
+  collectionSchema
+)
