@@ -1,6 +1,7 @@
 import { Router, Request, Response, NextFunction } from "express";
 import {collection} from "../models/apiCollection";
 import axios from "axios";
+import { ApiResult } from "../models/apiResult";
 
 const router = Router();
 
@@ -61,6 +62,27 @@ router.delete('/:id', async (req: Request, res: Response, next: NextFunction) =>
     next(error)
   }
 })
+
+router.get(
+  '/:id/healthResults',
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const collectionId = req.params.id
+      console.log(collectionId)
+      const result = await ApiResult.find({ collectionId: collectionId })
+      if (result) {
+        res.status(200).json(result)
+      } else {
+        res.status(404).json('Results not found!')
+      }
+    } catch (error) {
+      next(error)
+    }
+  }
+)
+
+
+
 
 
 

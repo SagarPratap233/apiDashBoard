@@ -4,6 +4,7 @@ import apiHealthRoutes from './routes/apiHealth';
 import curlCommandRoutes from './routes/curlCommand';
 import checkHealthPerAPI from './routes/checkHealthPerAPI'
 import fetchCollection from './routes/fetchCollections'
+import pollCollection from './routes/polls'
 import mongoose from 'mongoose';
 import { errorHandler } from './middleware/errorHandle';
 import {collection} from './models/apiCollection';
@@ -35,6 +36,7 @@ app.use('/apiHealth', apiHealthRoutes)
 app.use('/curlCommands', curlCommandRoutes)
 app.use('/checkHealthPerAPI', checkHealthPerAPI)
 app.use('/collections', fetchCollection)
+app.use('/pollCollection', pollCollection)
 
 app.listen(PORT, ()=> {
     console.log(`Server is listening at ${PORT}`)

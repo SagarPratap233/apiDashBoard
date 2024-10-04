@@ -21,7 +21,7 @@ interface api {
 export const checkAPIHealth = async(api: api|null): Promise<healthOutput> => {
   if(api){
     const {url, headers, method} = api;
-    // console.log({ url, headers, method });
+    
     const headersConvert:object = Object.entries(headers)
     try{
         const startTime = Date.now();
@@ -70,11 +70,12 @@ export const checkAPIHealth = async(api: api|null): Promise<healthOutput> => {
 
 export const apiHealthCheckPerCollection = async (id: string) => {
   const apiCollection = await collection.findById(id).populate('apis');
+  console.log(apiCollection)
   if(!apiCollection){
     return null;
   }
   const result = await Promise.all(apiCollection.apis.map(async (api)=> {
-    const apiRecord :api|null= await  CurlCommand.findById(api);
+    const apiRecord :api|null= await  CurlCommand.findById(api.api);
     if(apiRecord)
       {
         const res = await checkAPIHealth(apiRecord)

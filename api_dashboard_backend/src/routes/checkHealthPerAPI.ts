@@ -10,6 +10,7 @@ router.get('/:id', async (req:Request, res:Response, next:NextFunction) => {
 
     try{
         const result = await apiHealthCheckPerCollection(id);
+        // console.log(result)
         if (!result) {
           next(new AppError('Collection of APIs not found', 404))
         } else {
